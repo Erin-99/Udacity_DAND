@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>各国电影口碑发展</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<script type="text/javascript" src="d3.js"></script>
+		<script src="dimple.js"></script>
+	</head>
+	<body>
+
+		<!-- Header -->
+			<section id="header">
+				<header class="major">
+					<h1>各国电影口碑发展</h1>
+					<h3>Udacity-P6可视化数据展示作业，数据来源 <a href="https://www.kaggle.com/deepmatrix/imdb-5000-movie-dataset">Kaggle</a></h3>
+				</header>
+				<div class="container">
+					<ul class="actions">
+						<li><a href="#one" class="button special scrolly">Begin</a></li>
+					</ul>
+				</div>
+			</section>
+
+		<!-- One -->
+			<section id="one" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/pic01.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+						<h2>背景介绍</h2>
+						</header>
+						<p>这是来自Udacity的数据分析师课程的P6作业，主题为数据可视化</p>
+						<p>根据kaggle上提供的IMBD数据集，观察从历年来各国电影的评分变动，其中根据影片量贡献情况
+							选取USA, UK, France,Canada,Germany,Australia,India,Spain,China这九个国家，
+							同时为了页面载入和执行效率，删除了原数据集中不必要展示的数据。
+						<p>数据可视化部分主要采用D3，Dimple.js 技术实现</p>
+					</div>
+					<a href="#two" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+		<!-- Two -->
+			<section id="two" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/pic02.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>数据展示</h2>
+						</header>
+						<p>这个可视化方案，我的思路是去观察各个国家的电影口碑，那么我最后确定的是X轴为影片上映年限，这样还可以观察到随着时间的进程口碑的发展。Y轴为IMBD分数。
+						动态交互上为了展示各个国家口碑情况，在右侧栏设置了交互按钮，来展示各国的情况。同时设置了鼠标悬停，精准获得每个数据点的信息。
+					</p>
+						<p>点击右侧列表可以将点击的国家的添加、隐藏。</p>
+						<p>鼠标悬停可以显示具体该部影片的影片名称，所属国，IMDB评分及哪年上映。</p>
+						<p>由于数据量大，动态交互有一定的延迟现象</p>
+             <!-- begin d3 -->
+						 <div id="chartContainer">
+ 					    <script type="text/javascript">
+ 					      var svg = dimple.newSvg("#chartContainer", 590, 400);
+ 					        d3.csv("movie.csv", function (data) {
+
+ 					          data = dimple.filterData(data, "country", ["UK", "France","Canada","Germany","Australia","India","Spain","China"]);
+ 					          // Create the chart
+ 					          var myChart = new dimple.chart(svg, data);
+ 					          myChart.setBounds(60, 30, 420, 330)
+
+ 					          var x = myChart.addTimeAxis("x", "title_year");
+ 					          var y = myChart.addMeasureAxis("y", "score");
+ 					          x.dateParseFormat = "%Y";
+ 					          x.tickFormat = "%Y";
+ 					          x.timeInterval = 4;
+
+
+
+ 					          myChart.addSeries(["movie_title", "score", "country"], dimple.plot.bubble);
+ 					          var myLegend = myChart.addLegend(550, 100, 60, 300, "Right");
+ 					          myChart.draw();
+
+
+ 					          myChart.legends = [];
+
+
+
+
+ 					          var filterValues = dimple.getUniqueValues(data, "country");
+
+ 					          myLegend.shapes.selectAll("rect")
+
+ 					            .on("click", function (e) {
+
+ 					              var hide = false;
+ 					              var newFilters = [];
+
+ 					              filterValues.forEach(function (f) {
+ 					                if (f === e.aggField.slice(-1)[0]) {
+ 					                  hide = true;
+ 					                } else {
+ 					                  newFilters.push(f);
+ 					                }
+ 					              });
+ 					              // Hide the shape or show it
+ 					              if (hide) {
+ 					                d3.select(this).style("opacity", 0.2);
+ 					              } else {
+ 					                newFilters.push(e.aggField.slice(-1)[0]);
+ 					                d3.select(this).style("opacity", 0.8);
+ 					              }
+ 					              // Update the filters
+ 					              filterValues = newFilters;
+ 					              // Filter the data
+ 					              myChart.data = dimple.filterData(data, "country", filterValues);
+ 					              // Passing a duration parameter makes the chart animate. Without
+ 					              // it there is no transition
+ 					              myChart.draw(800);
+ 					            });
+ 					        });
+ 					    </script>
+ 					  </div>
+					<!--  end d3 -->
+						<p>备注：所有的国家标签全部点掉隐藏后，需要重新刷新页面载入</p>
+						<header class="major">
+							<h2>美国</h2>
+							<p>由于D3.js处理数据能力有限，美国(USA)多电影世界贡献量太大了，单独截图后静态展示</p>
+							<span class=""><img src="images/usa.png"  height="400" width="490" alt="" /></span>
+						</header>
+
+					</div>
+					<a href="#three" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+		<!-- Three -->
+			<section id="three" class="main special">
+				<div class="container">
+					<span class="image fit primary"><img src="images/pic03.jpg" alt="" /></span>
+					<div class="content">
+						<header class="major">
+							<h2>数据故事</h2>
+							<li>整体来看随着电影产业进年来的发展，烂片越来越多</li>
+							<li>多数国家的电影口碑从差评到好评均匀分布</li>
+							<li>特例是英国电影口碑整体较高</li>
+						</header>
+
+					</div>
+					<a href="#footer" class="goto-next scrolly">Next</a>
+				</div>
+			</section>
+
+
+			<section id="footer">
+				<div class="container">
+					<header class="major">
+						<h2>总结</h2>
+						<p>本次使用D3.js与dimple.js技术进行可视化，优势在于可视化的每个细节都可以代码级别调整，可以动态交互，同时可方便的在网页端展示。劣势在于本次项目遇到的问题
+						数据集较大时绘制点过多时，发生执行效率差，数据处理能力弱。当然写代码的便利性怎么也比不上现成的可视化工具，诸如teabluea、甚至Excel这样的工具。</p>
+					</header>
+
+				</div>
+				<footer>
+					<ul class="icons">
+						<li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="icon alt fa-dribbble"><span class="label">Dribbble</span></a></li>
+						<li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Demo Images: <a href="http://unsplash.com">Unsplash</a></li>
+					</ul>
+				</footer>
+			</section>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
