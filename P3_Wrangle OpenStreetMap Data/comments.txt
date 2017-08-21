@@ -1,0 +1,8 @@
+python转csv出现中文乱码问题：
+http://www.cnblogs.com/vsivn/p/6115537.html
+
+张江镇：
+http://www.openstreetmap.org/export#map=12/31.2063/121.6245
+
+上海市：
+https://mapzen.com/data/metro-extracts/metro/shanghai_china/
