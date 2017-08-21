@@ -1,0 +1,16 @@
+(lp0
+S'poi'
+p1
+aS'total_stock_value'
+p2
+aS'expenses'
+p3
+aS'exercised_stock_options'
+p4
+aS'restricted_stock'
+p5
+aS'from_messages'
+p6
+aS'fraction_to_poi'
+p7
+a.
